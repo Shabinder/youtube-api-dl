@@ -6,6 +6,7 @@ import kotlinx.coroutines.runBlocking
 fun main() {
     val downloader = YoutubeDownloader()
     runBlocking {
-        println(downloader.getVideo("2lfETGiIDf8").videoDetails.toString())
+        val video = downloader.getVideo("mGLocpX09mU")
+        println(video.videoWithAudioFormats().joinToString("\n"))
     }
 }

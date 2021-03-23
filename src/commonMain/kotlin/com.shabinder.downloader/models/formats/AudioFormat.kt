@@ -19,4 +19,7 @@ class AudioFormat(json: JsonObject, isAdaptive: Boolean) : Format(json, isAdapti
     override fun type(): String {
         return AUDIO
     }
+    override fun toString(): String {
+        return audioQuality.name + " - " + "$averageBitrate / $bitrate" +" - " + extension?.value + " - " + url
+    }
 }

@@ -178,7 +178,7 @@ class DefaultParser(
         val jsUrl = getJsUrl(json)
         val formats: MutableList<Format> = mutableListOf()
         populateFormats(formats, JsonArray(jsonFormats), jsUrl, false)
-        populateFormats(formats, JsonArray(jsonFormats), jsUrl, true)
+        populateFormats(formats, JsonArray(jsonAdaptiveFormats), jsUrl, true)
         return formats
     }
 

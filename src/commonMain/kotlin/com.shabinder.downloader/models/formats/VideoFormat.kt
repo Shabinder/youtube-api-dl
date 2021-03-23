@@ -18,6 +18,10 @@ class VideoFormat(json: JsonObject, isAdaptive: Boolean) : Format(json, isAdapti
         return VIDEO
     }
 
+    override fun toString(): String {
+        return videoQuality.name + " - " + "${this.fps}FPS / $bitrate" +" - " + extension?.value + " - " + url
+    }
+
     init {
         if (json.containsKey("size")) {
             val split = json.getString("size")?.split("x")

@@ -30,4 +30,7 @@ class AudioVideoFormat(json: JsonObject, isAdaptive: Boolean) : Format(json, isA
     override fun type(): String {
         return AUDIO_VIDEO
     }
+    override fun toString(): String {
+        return videoQuality.name + " - " + "${this.averageBitrate} / $bitrate" +" - " + extension?.value + " - " + url
+    }
 }
