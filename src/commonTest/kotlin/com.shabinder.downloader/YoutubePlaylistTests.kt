@@ -15,7 +15,7 @@ import kotlin.test.assertTrue
 import kotlin.test.fail
 
 internal abstract class YoutubePlaylistTests  {
-    protected val downloader: YoutubeDownloader = YoutubeDownloader()
+    private val downloader: YoutubeDownloader = YoutubeDownloader()
     protected val scope = CoroutineScope(Dispatchers.Default)
 
     @Throws(YoutubeException::class, CancellationException::class)
