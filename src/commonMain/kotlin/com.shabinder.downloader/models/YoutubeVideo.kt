@@ -6,19 +6,20 @@ import com.shabinder.downloader.models.formats.Format
 import com.shabinder.downloader.models.formats.VideoFormat
 import com.shabinder.downloader.models.quality.AudioQuality
 import com.shabinder.downloader.models.quality.VideoQuality
+import com.shabinder.downloader.models.subtitles.SubtitlesInfo
 
 @Suppress("UNCHECKED_CAST")
 data class YoutubeVideo(
     val videoDetails: VideoDetails,
     val formats: List<Format>,
-    //val subtitlesInfo: List<SubtitlesInfo>,
+    val subtitlesInfo: List<SubtitlesInfo>,
     val clientVersion: String
 ) {
     fun findFormatByItag(itag: Int): Format? = formats.firstOrNull { it.itag.id == itag }
 
-    fun videoWithAudioFormats(): List<AudioVideoFormat> = formats.filterIsInstance<AudioVideoFormat>()
+    fun getVideoWithAudioFormats(): List<AudioVideoFormat> = formats.filterIsInstance<AudioVideoFormat>()
 
-    fun videoFormats(): List<VideoFormat> = formats.filterIsInstance<VideoFormat>()
+    fun getVideoFormats(): List<VideoFormat> = formats.filterIsInstance<VideoFormat>()
 
     fun findVideoWithQuality(videoQuality: VideoQuality): List<VideoFormat> =
         formats.filter{
@@ -30,7 +31,7 @@ data class YoutubeVideo(
             it is VideoFormat && (it.extension?.equals(extension) == true)
         } as List<VideoFormat>
 
-    fun audioFormats(): List<AudioFormat> = formats.filterIsInstance<AudioFormat>()
+    fun getAudioFormats(): List<AudioFormat> = formats.filterIsInstance<AudioFormat>()
 
     fun findAudioWithQuality(audioQuality: AudioQuality): List<AudioFormat> =
         formats.filter { it is AudioFormat && it.audioQuality === audioQuality } as List<AudioFormat>

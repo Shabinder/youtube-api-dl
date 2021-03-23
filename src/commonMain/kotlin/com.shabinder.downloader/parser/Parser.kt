@@ -7,6 +7,7 @@ import com.shabinder.downloader.models.VideoDetails
 import com.shabinder.downloader.models.formats.Format
 import com.shabinder.downloader.models.playlist.PlaylistDetails
 import com.shabinder.downloader.models.playlist.PlaylistVideoDetails
+import com.shabinder.downloader.models.subtitles.SubtitlesInfo
 import kotlinx.serialization.json.JsonObject
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -23,11 +24,11 @@ interface Parser {
     @Throws(YoutubeException::class, CancellationException::class)
     suspend fun getJsUrl(json: JsonObject): String
 
-    /*fun getSubtitlesInfoFromCaptions(config: JsonObject?): List<SubtitlesInfo?>?
+    fun getSubtitlesInfoFromCaptions(json: JsonObject): List<SubtitlesInfo>
 
-    @Throws(YoutubeException::class)
-    fun getSubtitlesInfo(videoId: String?): List<SubtitlesInfo?>?
-    */
+    @Throws(YoutubeException::class, CancellationException::class)
+    suspend fun getSubtitlesInfo(videoId: String): List<SubtitlesInfo>
+
     @Throws(YoutubeException::class, CancellationException::class)
     suspend fun parseFormats(json: JsonObject): List<Format>
 

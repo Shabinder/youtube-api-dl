@@ -8,6 +8,7 @@ import com.shabinder.downloader.models.formats.Format
 import com.shabinder.downloader.models.playlist.PlaylistDetails
 import com.shabinder.downloader.models.playlist.PlaylistVideoDetails
 import com.shabinder.downloader.models.playlist.YoutubePlaylist
+import com.shabinder.downloader.models.subtitles.SubtitlesInfo
 import com.shabinder.downloader.parser.DefaultParser
 import com.shabinder.downloader.parser.Parser
 import kotlinx.serialization.json.JsonElement
@@ -16,7 +17,7 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlin.coroutines.cancellation.CancellationException
 
 class YoutubeDownloader(private var parser: Parser = DefaultParser()) {
-    
+
     fun setParserRequestProperty(key: String, value: String) {
         parser.extractor.setRequestProperty(key, value)
     }
@@ -41,9 +42,9 @@ class YoutubeDownloader(private var parser: Parser = DefaultParser()) {
         val ytConfigJson = JsonObject(ytPlayerConfig)
         val videoDetails: VideoDetails? = parser.getVideoDetails(ytConfigJson)
         val formats: List<Format> = parser.parseFormats(ytConfigJson)
-        //val subtitlesInfo: List<SubtitlesInfo> = parser.getSubtitlesInfoFromCaptions(ytPlayerConfig)
+        val subtitlesInfo: List<SubtitlesInfo> = parser.getSubtitlesInfoFromCaptions(ytConfigJson)
         val clientVersion: String = parser.getClientVersion(ytConfigJson)
-        return videoDetails?.let { YoutubeVideo(it, formats, /*subtitlesInfo,*/ clientVersion) }
+        return videoDetails?.let { YoutubeVideo(it, formats, subtitlesInfo, clientVersion) }
             ?: throw YoutubeException.VideoUnavailableException("Video Details Couldn't Be Fetched")
     }
 
@@ -65,8 +66,8 @@ class YoutubeDownloader(private var parser: Parser = DefaultParser()) {
         return getPlaylist(playlistId)
     }
 
-    /*@Throws(YoutubeException::class)
-    fun getVideoSubtitles(videoId: String?): List<SubtitlesInfo> {
+    @Throws(YoutubeException::class, CancellationException::class)
+    suspend fun getVideoSubtitles(videoId: String): List<SubtitlesInfo> {
         return parser.getSubtitlesInfo(videoId)
-    }*/
+    }
 }
