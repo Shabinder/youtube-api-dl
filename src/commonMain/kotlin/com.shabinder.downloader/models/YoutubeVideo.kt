@@ -1,3 +1,5 @@
+@file:Suppress("unused","UNCHECKED_CAST")
+
 package com.shabinder.downloader.models
 
 import com.shabinder.downloader.models.formats.AudioFormat
@@ -8,35 +10,34 @@ import com.shabinder.downloader.models.quality.AudioQuality
 import com.shabinder.downloader.models.quality.VideoQuality
 import com.shabinder.downloader.models.subtitles.SubtitlesInfo
 
-@Suppress("UNCHECKED_CAST")
 data class YoutubeVideo(
     val videoDetails: VideoDetails,
     val formats: List<Format>,
     val subtitlesInfo: List<SubtitlesInfo>,
     val clientVersion: String
 ) {
-    fun findFormatByItag(itag: Int): Format? = formats.firstOrNull { it.itag.id == itag }
+    fun getFormatByItag(itag: Int): Format? = formats.firstOrNull { it.itag.id == itag }
 
     fun getVideoWithAudioFormats(): List<AudioVideoFormat> = formats.filterIsInstance<AudioVideoFormat>()
 
     fun getVideoFormats(): List<VideoFormat> = formats.filterIsInstance<VideoFormat>()
 
-    fun findVideoWithQuality(videoQuality: VideoQuality): List<VideoFormat> =
+    fun getVideoWithQuality(videoQuality: VideoQuality): List<VideoFormat> =
         formats.filter{
             it is VideoFormat && it.videoQuality === videoQuality
         } as List<VideoFormat>
 
-    fun findVideoWithExtension(extension: Extension): List<VideoFormat> =
+    fun getVideoWithExtension(extension: Extension): List<VideoFormat> =
         formats.filter {
             it is VideoFormat && (it.extension?.equals(extension) == true)
         } as List<VideoFormat>
 
     fun getAudioFormats(): List<AudioFormat> = formats.filterIsInstance<AudioFormat>()
 
-    fun findAudioWithQuality(audioQuality: AudioQuality): List<AudioFormat> =
+    fun getAudioWithQuality(audioQuality: AudioQuality): List<AudioFormat> =
         formats.filter { it is AudioFormat && it.audioQuality === audioQuality } as List<AudioFormat>
 
-    fun findAudioWithExtension(extension: Extension): List<AudioFormat> =
+    fun getAudioWithExtension(extension: Extension): List<AudioFormat> =
         formats.filter { it is AudioFormat && it.extension === extension } as List<AudioFormat>
 
 

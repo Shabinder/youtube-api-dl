@@ -14,8 +14,8 @@ abstract class AbstractVideoDetails(json: JsonObject) {
     var thumbnails: MutableList<String>
 
     // Subclass specific extraction
-    protected var title: String? = null
-    protected var author: String? = null
+    var title: String? = null
+    var author: String? = null
     var isLive = false
         protected set
 
