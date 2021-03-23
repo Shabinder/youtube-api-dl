@@ -1,5 +1,6 @@
 package com.shabinder.downloader.cipher
 
+import com.shabinder.downloader.dotAllRegexOption
 import com.shabinder.downloader.exceptions.YoutubeException
 import com.shabinder.downloader.exceptions.YoutubeException.CipherException
 import com.shabinder.downloader.extractor.Extractor
@@ -84,32 +85,23 @@ class CachedCipherFactory(private val extractor: Extractor) : CipherFactory {
      */
     @Throws(YoutubeException::class)
     private fun parseFunction(jsFunction: String): JsFunction {
-        println("JSFUNCTION   $jsFunction")
         for (jsFunctionPattern in JS_FUNCTION_PATTERNS) {
             val matcher = jsFunctionPattern.find(jsFunction)
             if (matcher != null) {
-                println("matchFound:    ${matcher.value}")
                 val `var`: String?
                 var split: Array<String?> = jsFunction.split("\\.".toRegex()).toTypedArray() // case: Mx.FH(a,21)
-
-                println("matchFound Split:    ${split.joinToString(" : ")}")
                 if (split.size > 1) {
                     `var` = split[0]
                 } else {
                     split = jsFunction.split("\\[".toRegex()).toTypedArray() // case: Mx["do"](a,21)
-                    println("Matcher  2Split " + split.size + split.joinToString(" : "))
-
                     if (split.size > 1) {
                         `var` = split[0]
                     } else {
-                        //matcher = matcher.next()
                         continue
                     }
                 }
                 val name = matcher.groupValues[1]
                 val argument = matcher.groupValues[2]
-                println("$`var` : $name : $argument")
-                println("Js Patter ${jsFunctionPattern.pattern}")
                 if(`var` != null)
                     return JsFunction(`var`, name, argument)
             }
@@ -159,11 +151,11 @@ class CachedCipherFactory(private val extractor: Extractor) : CipherFactory {
         var temp = `var`
         temp = temp.replace("[^\$A-Za-z0-9_]".toRegex(), "")
         temp = Regex.escape(temp)
-        val pattern: Regex =
-            Regex("$temp %s=\\{(.*?)\\};", RegexOption.MULTILINE) //TODO DOT_ALL
+        val pattern =
+            Regex("var $temp=\\{(.*?)\\};", dotAllRegexOption)
         val matcher = pattern.find(js)
-        return matcher?.groupValues?.get(1)?.replace("\n".toRegex(), " ")?.split(", ")?.toTypedArray()
-            ?: throw CipherException("Transform object not found")
+        val res = matcher?.groupValues?.get(1)?.replace("\n".toRegex(), " ")?.split(", ")?.toTypedArray()
+        return res ?: throw CipherException("Transform object not found")
     }
 
     /**
