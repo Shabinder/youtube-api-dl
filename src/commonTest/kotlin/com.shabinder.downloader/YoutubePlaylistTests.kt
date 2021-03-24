@@ -6,8 +6,6 @@ import com.shabinder.downloader.exceptions.YoutubeException
 import com.shabinder.downloader.models.playlist.PlaylistDetails
 import com.shabinder.downloader.models.playlist.PlaylistVideoDetails
 import com.shabinder.downloader.models.playlist.YoutubePlaylist
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -16,7 +14,6 @@ import kotlin.test.fail
 
 internal abstract class YoutubePlaylistTests  {
     private val downloader: YoutubeDownloader = YoutubeDownloader()
-    protected val scope = CoroutineScope(Dispatchers.Default)
 
     @Throws(YoutubeException::class, CancellationException::class)
     protected suspend fun getPlaylist(playlistId: String): YoutubePlaylist {
