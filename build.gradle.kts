@@ -7,8 +7,6 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
-    maven(url = "https://cache-redirector.jetbrains.com/maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
-    maven(url = "https://kotlin.bintray.com/kotlinx")
 }
 
 kotlin {
@@ -32,21 +30,20 @@ kotlin {
         }
         binaries.executable()
     }
-    val hostOs = System.getProperty("os.name")
-    val isMingwX64 = hostOs.startsWith("Windows")
-    val nativeTarget = when {
-        hostOs == "Mac OS X" -> macosX64("native")
-        hostOs == "Linux" -> linuxX64("native")
-        isMingwX64 -> mingwX64("native")
-        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-    }
-
+    ios()
+    macosX64()
+    mingwX64()
+    linuxX64()
     val ktorVersion = "1.5.2"
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2-native-mt"){
+                    version {
+                        strictly("1.4.2-native-mt")
+                    }
+                }
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
             }
         }
@@ -76,11 +73,41 @@ kotlin {
                 implementation(kotlin("test-js"))
             }
         }
-        val nativeMain by getting {
+        val iosMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-ios:$ktorVersion")
             }
         }
-        val nativeTest by getting
+        val iosTest by getting
+        val desktopCommonMain by creating {
+            dependsOn(commonMain)
+            dependencies {
+                implementation("io.ktor:ktor-client-curl:$ktorVersion")
+            }
+        }
+        val desktopCommonTest by creating {
+            dependsOn(commonTest)
+        }
+        val mingwX64Main by getting
+        val macosX64Main by getting
+        val linuxX64Main by getting
+        configure(listOf(mingwX64Main, macosX64Main, linuxX64Main)) {
+            dependsOn(desktopCommonMain)
+        }
+
+        val mingwX64Test by getting
+        val macosX64Test by getting
+        val linuxX64Test by getting
+        configure(listOf(mingwX64Test, macosX64Test, linuxX64Test)) {
+            dependsOn(desktopCommonTest)
+        }
+        /*val hostOs = System.getProperty("os.name")
+        val isMingwX64 = hostOs.startsWith("Windows")
+        val nativeTarget = when {
+            hostOs == "Mac OS X" -> macosX64("native")
+            hostOs == "Linux" -> linuxX64("native")
+            isMingwX64 -> mingwX64("native")
+            else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
+        }*/
     }
 }

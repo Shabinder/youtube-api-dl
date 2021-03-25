@@ -29,7 +29,7 @@ data class YoutubeVideo(
 
     fun getVideoWithExtension(extension: Extension): List<VideoFormat> =
         formats.filter {
-            it is VideoFormat && (it.extension?.equals(extension) == true)
+            it is VideoFormat && it.extension == extension
         } as List<VideoFormat>
 
     fun getAudioFormats(): List<AudioFormat> = formats.filterIsInstance<AudioFormat>()

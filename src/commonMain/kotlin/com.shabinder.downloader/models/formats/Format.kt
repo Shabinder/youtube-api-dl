@@ -11,14 +11,42 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
 abstract class Format protected constructor(json: JsonObject, val isAdaptive: Boolean) {
-    val itag: Itag
-    val url: String?
-    val mimeType: String?
-    var extension: Extension? = null
-    val bitrate: Int
-    val contentLength: Long
-    val lastModified: Long
-    val approxDurationMs: Long
+
+    val itag: Itag = try {
+        Itag.valueOf("i" + json["itag"]?.jsonPrimitive)
+    } catch (e: IllegalArgumentException) {
+        e.printStackTrace()
+        Itag.unknown.apply {
+            setID(json["itag"]?.jsonPrimitive?.content?.toInt() ?: 0)
+        }
+    }
+
+    val url: String? = json.getString("url")?.replace("\\u0026", "&")
+    val mimeType: String? = json.getString("mimeType")
+    val bitrate: Int = json.getInteger("bitrate")
+    val contentLength: Long = json.getLong("contentLength")
+    val lastModified: Long = json.getLong("lastModified")
+    val approxDurationMs: Long = json.getLong("approxDurationMs")
+    var extension: Extension = when {
+        mimeType == null || mimeType.isEmpty() -> {
+            Extension.UNKNOWN
+        }
+        mimeType.contains(Extension.MPEG4.value) -> {
+            if (this is AudioFormat) Extension.M4A else Extension.MPEG4
+        }
+        mimeType.contains(Extension.WEBM.value) -> {
+            if (this is AudioFormat) Extension.WEBA else Extension.WEBM
+        }
+        mimeType.contains(Extension.FLV.value) -> {
+            Extension.FLV
+        }
+        mimeType.contains(Extension._3GP.value) -> {
+            Extension._3GP
+        }
+        else -> {
+            Extension.UNKNOWN
+        }
+    }
 
     abstract fun type(): String?
 
@@ -26,36 +54,5 @@ abstract class Format protected constructor(json: JsonObject, val isAdaptive: Bo
         const val AUDIO = "audio"
         const val VIDEO = "video"
         const val AUDIO_VIDEO = "audio/video"
-    }
-
-    init {
-        var itag: Itag
-        try {
-            itag = Itag.valueOf("i" + json["itag"]?.jsonPrimitive)
-        } catch (e: IllegalArgumentException) {
-            e.printStackTrace()
-            itag = Itag.unknown
-            itag.setID(json["itag"]?.jsonPrimitive?.content?.toInt() ?: 0)
-        }
-        this.itag = itag
-        url = json.getString("url")?.replace("\\u0026", "&")
-        mimeType = json.getString("mimeType")
-        bitrate = json.getInteger("bitrate") ?: 0
-        contentLength = json.getLong("contentLength") ?: 0
-        lastModified = json.getLong("lastModified") ?: 0
-        approxDurationMs = json.getLong("approxDurationMs") ?: 0
-        extension = if (mimeType == null || mimeType.isEmpty()) {
-            Extension.UNKNOWN
-        } else if (mimeType.contains(Extension.MPEG4.value)) {
-            if (this is AudioFormat) Extension.M4A else Extension.MPEG4
-        } else if (mimeType.contains(Extension.WEBM.value)) {
-            if (this is AudioFormat) Extension.WEBA else Extension.WEBM
-        } else if (mimeType.contains(Extension.FLV.value)) {
-            Extension.FLV
-        } else if (mimeType.contains(Extension._3GP.value)) {
-            Extension._3GP
-        } else {
-            Extension.UNKNOWN
-        }
     }
 }

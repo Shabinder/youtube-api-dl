@@ -19,7 +19,7 @@ class VideoFormat(json: JsonObject, isAdaptive: Boolean) : Format(json, isAdapti
     }
 
     override fun toString(): String {
-        return videoQuality.name + " - " + "${this.fps}FPS / $bitrate" +" - " + extension?.value + " - " + url
+        return videoQuality.name + " - " + "${this.fps}FPS / $bitrate" +" - " + extension.value + " - " + url
     }
 
     init {

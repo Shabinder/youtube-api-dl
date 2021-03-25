@@ -169,6 +169,7 @@ class CachedCipherFactory(private val extractor: Extractor) : CipherFactory {
     private fun getTransformFunctionsMap(transformObject: Array<String>): Map<String, CipherFunction> {
         val mapper: MutableMap<String, CipherFunction> = HashMap()
         for (obj in transformObject) {
+            @Suppress("CHANGING_ARGUMENTS_EXECUTION_ORDER_FOR_NAMED_VARARGS")
             val split = obj.split(delimiters = charArrayOf(':'),ignoreCase = true,limit = 2).toTypedArray()
             val name = split[0]
             val jsFunction = split[1]
