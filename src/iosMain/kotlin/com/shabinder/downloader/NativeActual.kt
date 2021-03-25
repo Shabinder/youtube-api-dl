@@ -1,7 +1,8 @@
 package com.shabinder.downloader
 
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineScope
 
-actual val dotAllRegexOption: RegexOption = RegexOption.DOT_MATCHES_ALL
+actual fun runBlocking(block: suspend CoroutineScope.() -> Unit) =
+    kotlinx.coroutines.runBlocking(block = block)
 
-actual fun runTest(block: suspend () -> Unit) = runBlocking { block() }
+actual val activePlatform : TargetPlatforms = TargetPlatforms.Native

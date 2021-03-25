@@ -16,27 +16,13 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlin.coroutines.cancellation.CancellationException
 
-class YoutubeDownloader(private var parser: Parser = DefaultParser()) {
+class YoutubeDownloader(private val parser: Parser = DefaultParser(), private val corsProxyAddress: String = "https://kind-grasshopper-73.telebit.io/cors/") {
 
-    fun setParserRequestProperty(key: String, value: String) {
-        parser.extractor.setRequestProperty(key, value)
-    }
-
-    fun setParserRetryOnFailure(retryOnFailure: Int) {
-        parser.extractor.setRetryOnFailure(retryOnFailure)
-    }
-
-    fun addCipherFunctionPattern(priority: Int, regex: String) {
-        parser.cipherFactory.addInitialFunctionPattern(priority, regex)
-    }
-
-    fun addCipherFunctionEquivalent(regex: String, function: CipherFunction) {
-        parser.cipherFactory.addFunctionEquivalent(regex, function)
-    }
+    private val corsProxy get() = if(activePlatform is TargetPlatforms.Js) corsProxyAddress else ""
 
     @Throws(YoutubeException::class, CancellationException::class)
     suspend fun getVideo(videoId: String): YoutubeVideo {
-        val htmlUrl = "https://www.youtube.com/watch?v=$videoId"
+        val htmlUrl = "${corsProxy}https://www.youtube.com/watch?v=$videoId"
         val ytPlayerConfig: MutableMap<String,JsonElement> = parser.getPlayerConfig(htmlUrl).toMutableMap()
         ytPlayerConfig["yt-downloader-videoId"] = JsonPrimitive(videoId)
         val ytConfigJson = JsonObject(ytPlayerConfig)
@@ -50,7 +36,7 @@ class YoutubeDownloader(private var parser: Parser = DefaultParser()) {
 
     @Throws(YoutubeException::class, CancellationException::class)
     suspend fun getPlaylist(playlistId: String): YoutubePlaylist {
-        val htmlUrl = "https://www.youtube.com/playlist?list=$playlistId"
+        val htmlUrl = "${corsProxy}https://www.youtube.com/playlist?list=$playlistId"
         val ytInitialData: JsonObject = parser.getInitialData(htmlUrl)
         if (!ytInitialData.containsKey("metadata")) {
             throw YoutubeException.BadPageException("Invalid initial data json")
@@ -69,5 +55,21 @@ class YoutubeDownloader(private var parser: Parser = DefaultParser()) {
     @Throws(YoutubeException::class, CancellationException::class)
     suspend fun getVideoSubtitles(videoId: String): List<SubtitlesInfo> {
         return parser.getSubtitlesInfo(videoId)
+    }
+
+    fun setParserRequestProperty(key: String, value: String) {
+        parser.extractor.setRequestProperty(key, value)
+    }
+
+    fun setParserRetryOnFailure(retryOnFailure: Int) {
+        parser.extractor.setRetryOnFailure(retryOnFailure)
+    }
+
+    fun addCipherFunctionPattern(priority: Int, regex: String) {
+        parser.cipherFactory.addInitialFunctionPattern(priority, regex)
+    }
+
+    fun addCipherFunctionEquivalent(regex: String, function: CipherFunction) {
+        parser.cipherFactory.addFunctionEquivalent(regex, function)
     }
 }

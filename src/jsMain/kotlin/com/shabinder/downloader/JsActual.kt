@@ -1,8 +1,8 @@
 package com.shabinder.downloader
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.promise
 
-actual val dotAllRegexOption = RegexOption.IGNORE_CASE
-
-actual fun runTest(block: suspend () -> Unit): dynamic = GlobalScope.promise { block() }
+actual fun runBlocking(block: suspend CoroutineScope.() -> Unit): dynamic = GlobalScope.promise(block = block)
+actual val activePlatform : TargetPlatforms = TargetPlatforms.Js

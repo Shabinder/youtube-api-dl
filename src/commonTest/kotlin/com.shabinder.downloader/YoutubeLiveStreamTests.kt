@@ -15,7 +15,7 @@ import kotlin.test.assertTrue
 internal class YoutubeLiveStreamTests {
 
     @Test
-    fun liveStreamHLS_Success() = runTest {
+    fun liveStreamHLS_Success() = runBlocking {
         val htmlUrl = "https://www.youtube.com/watch?v=$LIVE_ID"
         val parser = DefaultParser()
         val ytPlayerConfig: JsonObject = parser.getPlayerConfig(htmlUrl)
@@ -28,7 +28,7 @@ internal class YoutubeLiveStreamTests {
     }
     
     @Test
-    fun wasLiveFormats_Success() = runTest {
+    fun wasLiveFormats_Success() = runBlocking {
         val htmlUrl = "https://www.youtube.com/watch?v=$WAS_LIVE_ID"
         val parser = DefaultParser()
         val ytPlayerConfig: JsonObject = parser.getPlayerConfig(htmlUrl)

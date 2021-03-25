@@ -1,5 +1,7 @@
 package com.shabinder.downloader
 
-expect val dotAllRegexOption:RegexOption
+import kotlinx.coroutines.CoroutineScope
 
-expect fun runTest(block: suspend () -> Unit)
+expect fun runBlocking(block: suspend CoroutineScope.() -> Unit)
+
+expect val activePlatform : TargetPlatforms

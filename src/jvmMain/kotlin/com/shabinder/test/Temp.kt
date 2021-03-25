@@ -7,6 +7,6 @@ private fun main() {
     val downloader = YoutubeDownloader()
     runBlocking {
         val video = downloader.getVideo("mGLocpX09mU")
-        println(video.getAudioFormats().joinToString("\n"))
+        // println(video.getAudioFormats().joinToString("\n"))
     }
 }

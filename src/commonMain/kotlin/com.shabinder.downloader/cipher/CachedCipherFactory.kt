@@ -1,6 +1,5 @@
 package com.shabinder.downloader.cipher
 
-import com.shabinder.downloader.dotAllRegexOption
 import com.shabinder.downloader.exceptions.YoutubeException
 import com.shabinder.downloader.exceptions.YoutubeException.CipherException
 import com.shabinder.downloader.extractor.Extractor
@@ -151,8 +150,11 @@ class CachedCipherFactory(private val extractor: Extractor) : CipherFactory {
         var temp = `var`
         temp = temp.replace("[^\$A-Za-z0-9_]".toRegex(), "")
         temp = Regex.escape(temp)
+        /* Using [\s\S] instead of `.` and `RegexOptions.DOT_ALL`
+        *  As DOT_ALL OPTION ISN'T AVAILABLE on JS Platform
+        * */
         val pattern =
-            Regex("var $temp=\\{(.*?)\\};", dotAllRegexOption)
+            Regex("var $temp=\\{([\\s\\S]*?)\\};")
         val matcher = pattern.find(js)
         val res = matcher?.groupValues?.get(1)?.replace("\n".toRegex(), " ")?.split(", ")?.toTypedArray()
         return res ?: throw CipherException("Transform object not found")

@@ -18,17 +18,21 @@ kotlin {
             useJUnit()
         }
     }
-    js(LEGACY) {
+    js(IR) {
         browser {
             testTask {
-                useKarma {
-                    //useChromeHeadless()
-                    useFirefox()
-                    webpackConfig.cssSupport.enabled = true
+                useMocha {
+                    timeout = "15000"
                 }
             }
         }
-        binaries.executable()
+        nodejs {
+            testTask {
+                useMocha {
+                    timeout = "15000"
+                }
+            }
+        }
     }
     ios()
     macosX64()
