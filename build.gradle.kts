@@ -15,20 +15,32 @@
  */
 
 plugins {
+    id("com.android.library")
     kotlin("multiplatform") version "1.4.32"
+    id("maven-publish")
 }
 
-group = "com.shabinder"
-version = "1.0-SNAPSHOT"
+group = "com.shabinder.downloader"
+version = "0.1-SNAPSHOT"
 
 repositories {
+    google()
     mavenCentral()
 }
 
 val ktorVersion = "1.5.3"
 
 kotlin {
-    jvm {
+    android() {
+        publishLibraryVariants("release", "debug")
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "1.8"
+                useIR = true
+            }
+        }
+    }
+    jvm() {
         compilations.all {
             kotlinOptions {
                 jvmTarget = "1.8"
@@ -43,23 +55,24 @@ kotlin {
         browser {
             testTask {
                 useMocha {
-                    timeout = "15000"
+                    timeout = "30000"
                 }
             }
         }
         nodejs {
             testTask {
                 useMocha {
-                    timeout = "15000"
+                    timeout = "30000"
                 }
             }
         }
     }
     ios()
-    /*TODO:
-     Native Targets (libCurl Interop issue)*/
     macosX64() { compilations.getByName("main").cinterops.create("curl")  }
     mingwX64() { compilations.getByName("main").cinterops.create("curl")  }
+
+    /*TODO:
+     Native Targets (libCurl Interop issue)*/
     //linuxX64() { compilations.getByName("main").cinterops.create("curl") }
     /*targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>().forEach { target ->
         target.compilations.getByName("main").cinterops.create("curl")
@@ -80,6 +93,16 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+            }
+        }
+        val androidMain by getting {
+            dependencies {
+                implementation("io.ktor:ktor-client-android:$ktorVersion")
+            }
+        }
+        val androidTest by getting {
+            dependencies {
+                implementation(kotlin("test-junit"))
             }
         }
         val jvmMain by getting {
@@ -137,5 +160,17 @@ kotlin {
             isMingwX64 -> mingwX64("native")
             else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
         }*/
+    }
+}
+android {
+    compileSdkVersion(29)
+    defaultConfig {
+        minSdkVersion(21)
+        targetSdkVersion(29)
+    }
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 }

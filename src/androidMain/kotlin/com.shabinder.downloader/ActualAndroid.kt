@@ -13,19 +13,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-pluginManagement {
-    repositories {
-        google()
-        gradlePluginPortal()
-        mavenCentral()
-    }
-    resolutionStrategy {
-        eachPlugin {
-            if (requested.id.namespace == "com.android" || requested.id.name == "kotlin-android-extensions") {
-                useModule("com.android.tools.build:gradle:4.0.2")
-            }
-        }
-    }
-}
-rootProject.name = "youtube-api-dl"
 
+package com.shabinder.downloader
+
+import kotlinx.coroutines.CoroutineScope
+
+actual fun runBlocking(block: suspend CoroutineScope.() -> Unit) =
+    kotlinx.coroutines.runBlocking(block = block)
+
+actual val activePlatform : TargetPlatforms = TargetPlatforms.Jvm
