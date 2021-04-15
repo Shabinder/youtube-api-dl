@@ -35,7 +35,7 @@ internal class YoutubeLiveStreamTests {
         val details = parser.getVideoDetails(ytPlayerConfig)
         assertNotNull(details, "there should be a video details")
         assertEquals(WAS_LIVE_ID, details.videoId, "videoId should be $WAS_LIVE_ID")
-        assertTrue(details.isLiveContent, "videoId was live ")
+        assertTrue(details.isLiveContent == true, "videoId was live ")
         assertFalse(details.thumbnails.isEmpty(), "thumbnails should be not empty")
         assertNotEquals(0, details.lengthSeconds, "length should not be 0")
         assertNotEquals(0, details.viewCount, "viewCount should not be 0")

@@ -1,5 +1,5 @@
 plugins {
-    kotlin("multiplatform") version "1.4.31"
+    kotlin("multiplatform") version "1.4.32"
 }
 
 group = "com.shabinder"
@@ -9,10 +9,15 @@ repositories {
     mavenCentral()
 }
 
+val ktorVersion = "1.5.3"
+
 kotlin {
     jvm {
         compilations.all {
-            kotlinOptions.jvmTarget = "1.8"
+            kotlinOptions {
+                jvmTarget = "1.8"
+                useIR = true
+            }
         }
         testRuns["test"].executionTask.configure {
             useJUnit()
@@ -35,17 +40,23 @@ kotlin {
         }
     }
     ios()
+    /*
+    TODO:
+     Native Targets (libCurl Interop issue)
     macosX64()
     mingwX64()
-    linuxX64()
-    val ktorVersion = "1.5.2"
+    linuxX64() *//*{
+        compilations.main.cinterops {
+            interop
+        }
+    }*/
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2-native-mt"){
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3-native-mt"){
                     version {
-                        strictly("1.4.2-native-mt")
+                        strictly("1.4.3-native-mt")
                     }
                 }
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
@@ -83,7 +94,7 @@ kotlin {
             }
         }
         val iosTest by getting
-        val desktopCommonMain by creating {
+        /*val desktopCommonMain by creating {
             dependsOn(commonMain)
             dependencies {
                 implementation("io.ktor:ktor-client-curl:$ktorVersion")
@@ -104,7 +115,7 @@ kotlin {
         val linuxX64Test by getting
         configure(listOf(mingwX64Test, macosX64Test, linuxX64Test)) {
             dependsOn(desktopCommonTest)
-        }
+        }*/
         /*val hostOs = System.getProperty("os.name")
         val isMingwX64 = hostOs.startsWith("Windows")
         val nativeTarget = when {

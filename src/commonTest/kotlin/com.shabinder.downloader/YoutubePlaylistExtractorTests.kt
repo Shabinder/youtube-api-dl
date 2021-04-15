@@ -90,7 +90,7 @@ internal class YoutubePlaylistExtractorTests : YoutubePlaylistTests() {
             if (video.isLive) {
                 liveCount++
             }
-            assertTrue(video.isPlayable, "live playlist video should be playable")
+            assertTrue(video.isPlayable == true, "live playlist video should be playable")
         }
         val minLiveCount = 90
         assertTrue(
@@ -127,7 +127,7 @@ internal class YoutubePlaylistExtractorTests : YoutubePlaylistTests() {
             assertNotNull(videos, "playlist videos should not be null: $playlistId")
             assertEquals(videoCount, videos.size, "size should be $videoCount")
             for (video in videos) {
-                if (video.lengthSeconds > 0 && !video.isPlayable) {
+                if (video.lengthSeconds > 0 && video.isPlayable == false) {
                     assertNull(video.author, "Not playable video should not have an author")
                     assertTrue(
                         video.title.equals("[Private video]") || video.title.equals("[Deleted video]"),
@@ -141,9 +141,9 @@ internal class YoutubePlaylistExtractorTests : YoutubePlaylistTests() {
             assertEquals(title, video.title, "title should be $title")
             assertEquals(author, video.author, "author should be $author")
             if (isPlayable) {
-                assertTrue(video.isPlayable, "video should be playable")
+                assertTrue(video.isPlayable == true, "video should be playable")
             } else {
-                assertFalse(video.isPlayable, "video should not be playable")
+                assertFalse(video.isPlayable == true, "video should not be playable")
             }
         }
 

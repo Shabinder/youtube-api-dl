@@ -2,6 +2,8 @@ package com.shabinder.downloader.models
 
 import com.shabinder.downloader.exceptions.YoutubeException
 import com.shabinder.downloader.utils.getInteger
+import com.shabinder.downloader.utils.getJsonArray
+import com.shabinder.downloader.utils.getJsonObject
 import com.shabinder.downloader.utils.getString
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
@@ -23,10 +25,10 @@ abstract class AbstractVideoDetails(json: JsonObject) {
     protected abstract fun checkDownload()
 
     init {
-        val jsonThumbnails: JsonArray? = json["thumbnail"]?.jsonObject?.get("thumbnails")?.jsonArray
+        val jsonThumbnails: JsonArray? = json.getJsonObject("thumbnail")?.getJsonArray("thumbnails")
         thumbnails = mutableListOf()
         for (i in 0 until (jsonThumbnails?.size ?: 0)) {
-            val jsonObject = jsonThumbnails?.get(i)?.jsonObject
+            val jsonObject = jsonThumbnails?.getJsonObject(i)
             jsonObject?.getString("url")?.let { thumbnails.add(it) }
         }
     }

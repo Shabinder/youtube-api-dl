@@ -8,16 +8,15 @@ import com.shabinder.downloader.utils.getInteger
 import com.shabinder.downloader.utils.getLong
 import com.shabinder.downloader.utils.getString
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.jsonPrimitive
 
 abstract class Format protected constructor(json: JsonObject, val isAdaptive: Boolean) {
 
     val itag: Itag = try {
-        Itag.valueOf("i" + json["itag"]?.jsonPrimitive)
+        Itag.valueOf("i" + json.getString("itag"))
     } catch (e: IllegalArgumentException) {
         e.printStackTrace()
         Itag.unknown.apply {
-            setID(json["itag"]?.jsonPrimitive?.content?.toInt() ?: 0)
+            setID(json.getInteger("itag"))
         }
     }
 

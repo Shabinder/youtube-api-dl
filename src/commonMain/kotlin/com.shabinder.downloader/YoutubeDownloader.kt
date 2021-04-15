@@ -18,7 +18,7 @@ import kotlin.coroutines.cancellation.CancellationException
 
 class YoutubeDownloader(private val parser: Parser = DefaultParser(), private val corsProxyAddress: String = "https://kind-grasshopper-73.telebit.io/cors/") {
 
-    private val corsProxy get() = if(activePlatform is TargetPlatforms.Js) corsProxyAddress else ""
+    private val corsProxy get() = ""// if(activePlatform is TargetPlatforms.Js) corsProxyAddress else ""
 
     @Throws(YoutubeException::class, CancellationException::class)
     suspend fun getVideo(videoId: String): YoutubeVideo {
