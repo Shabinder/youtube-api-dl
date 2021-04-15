@@ -77,7 +77,15 @@ class DefaultExtractor : Extractor {
         val headers:HttpRequestBuilder.() -> Unit = {
             headers {
                 for((key,value) in requestProperties){
-                    header(key,value)
+                    if(key.equals("Content-Type",true)){
+                        /*
+                        * io.ktor.http.UnsafeHeaderException:
+                        *  Header(s) [Content-Type] are controlled by the engine and cannot be set explicitly
+                        * */
+                        //contentType(ContentType.Application.Json)
+                    }else{
+                        header(key,value)
+                    }
                 }
             }
         }

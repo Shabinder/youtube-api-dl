@@ -19,11 +19,13 @@ package com.shabinder.downloader.utils
 import com.shabinder.downloader.exceptions.YoutubeException
 import com.shabinder.downloader.models.NetworkResult
 import io.ktor.client.HttpClient
+import io.ktor.client.features.ClientRequestException
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.statement.HttpStatement
 import io.ktor.http.contentLength
 import io.ktor.http.isSuccess
+import io.ktor.utils.io.errors.IOException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlin.math.roundToInt
@@ -59,12 +61,20 @@ suspend fun downloadFile(url: String, client: HttpClient = HttpClient{}, httpBui
     }
 }
 suspend fun downloadByteArray(url: String, client: HttpClient = HttpClient{}, httpBuilder: HttpRequestBuilder.()->Unit = {}): ByteArray {
-    val response = client.get<HttpStatement>(url,httpBuilder).execute()
-    val data = ByteArray(response.contentLength()!!.toInt())
-    response.content.readFully(data,0,data.size)
-    client.close()
-    if (response.status.isSuccess()) {
-        return data
+    val response = try {
+        client.get<ByteArray>(url,httpBuilder)
+    } catch (e: ClientRequestException){
+        throw YoutubeException.BadPageException(e.message ?: "Could Not Fetch $url")
     }
-    throw YoutubeException.NetworkException("${response.status.value} : ${response.status.description} : $url")
+    catch (e: IOException){
+        throw YoutubeException.NetworkException("Could Not Fetch $url")
+    }
+    /*
+    * For Live Videos , `response.contentLength() == null`
+    * */
+    //val response = client.get<HttpStatement>(url,httpBuilder).execute()
+    //val data = ByteArray(response.contentLength()!!.toInt())
+    //response.content.readFully(data,0,data.size)
+    client.close()
+    return response
 }
