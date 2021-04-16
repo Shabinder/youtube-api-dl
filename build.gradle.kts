@@ -51,7 +51,7 @@ kotlin {
             useJUnit()
         }
     }
-    js(IR) {
+    js(BOTH) {
         browser {
             testTask {
                 useMocha {
@@ -66,6 +66,7 @@ kotlin {
                 }
             }
         }
+        //binaries.executable()
     }
     ios()
     macosX64() { compilations.getByName("main").cinterops.create("curl")  }
@@ -82,9 +83,9 @@ kotlin {
             dependencies {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3-native-mt"){
-                    version {
+                    /*version {
                         strictly("1.4.3-native-mt")
-                    }
+                    }*/
                 }
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
             }
