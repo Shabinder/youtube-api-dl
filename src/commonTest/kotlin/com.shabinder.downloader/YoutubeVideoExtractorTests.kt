@@ -106,7 +106,7 @@ internal class YoutubeVideoExtractorTests {
         }
     }
 
-    @Test
+    /*@Test
     fun addInitialFunctionPattern_Success() = runBlocking {
         downloader.addCipherFunctionPattern(
             0,
@@ -125,5 +125,5 @@ internal class YoutubeVideoExtractorTests {
             downloader.getVideo(videoId),
             "getVideo should not throw exception if initial function patterns has correct priority"
         )
-    }
+    }*/
 }
