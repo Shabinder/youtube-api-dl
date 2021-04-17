@@ -23,7 +23,7 @@ import kotlin.test.assertFailsWith
 
 internal class YoutubeChannelUploadsTests {
 
-    @Test
+    //@Test
     fun channelUploads() = runBlocking {
         val downloader = YoutubeDownloader()
         assertEquals(
@@ -48,7 +48,7 @@ internal class YoutubeChannelUploadsTests {
         )
     }
 
-    @Test
+    //@Test
     fun channelUploadsExceptions() = runBlocking {
         val downloader = YoutubeDownloader()
         assertFailsWith<YoutubeException.BadPageException>("should throw BadPageException") {

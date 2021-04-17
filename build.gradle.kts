@@ -29,10 +29,6 @@ repositories {
 
 val ktorVersion = "1.5.3"
 
-tasks.named("build") {
-    dependsOn.removeIf { it.toString().contains("jsLegacy") }
-}
-
 kotlin {
     android() {
         publishLibraryVariants("release", "debug")
@@ -72,24 +68,14 @@ kotlin {
         //binaries.executable()
     }
     ios()
-    macosX64() { compilations.getByName("main").cinterops.create("curl")  }
-    mingwX64() { compilations.getByName("main").cinterops.create("curl")  }
-
-    /*TODO:
-     Native Targets (libCurl Interop issue)*/
-    //linuxX64() { compilations.getByName("main").cinterops.create("curl") }
-    /*targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>().forEach { target ->
-        target.compilations.getByName("main").cinterops.create("curl")
-    }*/
+    macosX64()
+    mingwX64()
+    linuxX64()
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3-native-mt"){
-                    /*version {
-                        strictly("1.4.3-native-mt")
-                    }*/
-                }
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3-native-mt")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
             }
         }
@@ -141,14 +127,14 @@ kotlin {
         }
         val mingwX64Main by getting
         val macosX64Main by getting
-//        val linuxX64Main by getting
-        configure(listOf(mingwX64Main, macosX64Main/*, linuxX64Main*/)) {
+        val linuxX64Main by getting
+        configure(listOf(mingwX64Main, macosX64Main, linuxX64Main)) {
             dependsOn(desktopCommonMain)
         }
         val mingwX64Test by getting
         val macosX64Test by getting
-//        val linuxX64Test by getting
-        configure(listOf(mingwX64Test, macosX64Test/*, linuxX64Test*/)) {
+        val linuxX64Test by getting
+        configure(listOf(mingwX64Test, macosX64Test, linuxX64Test)) {
             dependsOn(desktopCommonTest)
         }
     }

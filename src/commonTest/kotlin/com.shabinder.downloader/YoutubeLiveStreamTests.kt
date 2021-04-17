@@ -30,7 +30,7 @@ import kotlin.test.assertTrue
 
 internal class YoutubeLiveStreamTests {
 
-    @Test
+    //@Test
     fun liveStreamHLS_Success() = runBlocking {
         val htmlUrl = "https://www.youtube.com/watch?v=$LIVE_ID"
         val parser = DefaultParser()
@@ -43,7 +43,7 @@ internal class YoutubeLiveStreamTests {
         assertTrue(isReachable(details.liveUrl!!), "url should be reachable")
     }
     
-    @Test
+    //@Test
     fun wasLiveFormats_Success() = runBlocking {
         val htmlUrl = "https://www.youtube.com/watch?v=$WAS_LIVE_ID"
         val parser = DefaultParser()

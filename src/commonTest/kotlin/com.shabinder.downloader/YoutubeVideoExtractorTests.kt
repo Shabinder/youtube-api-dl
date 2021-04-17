@@ -37,7 +37,7 @@ internal class YoutubeVideoExtractorTests {
 
     private val downloader: YoutubeDownloader = YoutubeDownloader()
 
-    @Test
+    //@Test
     fun videoWithoutSignatureSuccess() = runBlocking {
         val video: YoutubeVideo = downloader.getVideo(ME_AT_THE_ZOO_ID)
         val details: VideoDetails = video.videoDetails
@@ -98,7 +98,7 @@ internal class YoutubeVideoExtractorTests {
     }
 
 
-    @Test
+    //@Test
     fun videoUnavailableThrowsException() = runBlocking {
         val unavailableVideoId = "12345678901"
         assertFailsWith<YoutubeException.BadPageException>("getVideo should throw exception for unavailable video") {
@@ -106,7 +106,7 @@ internal class YoutubeVideoExtractorTests {
         }
     }
 
-    /*@Test
+    /*//@Test
     fun addInitialFunctionPattern_Success() = runBlocking {
         downloader.addCipherFunctionPattern(
             0,
