@@ -29,6 +29,10 @@ repositories {
 
 val ktorVersion = "1.5.3"
 
+tasks.named("build") {
+    dependsOn.removeIf { it.toString().contains("jsLegacy") }
+}
+
 kotlin {
     android() {
         publishLibraryVariants("release", "debug")
@@ -64,9 +68,6 @@ kotlin {
                     timeout = "30000"
                 }
             }
-        }
-        testRuns["test"].executionTask.configure {
-            isEnabled = false
         }
         //binaries.executable()
     }
