@@ -22,7 +22,6 @@ plugins {
 
 group = "com.shabinder.downloader"
 version = "0.1"
-
 repositories {
     google()
     mavenCentral()
@@ -65,6 +64,9 @@ kotlin {
                     timeout = "30000"
                 }
             }
+        }
+        testRuns["test"].executionTask.configure {
+            isEnabled = false
         }
         //binaries.executable()
     }
