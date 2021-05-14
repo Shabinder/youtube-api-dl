@@ -27,10 +27,9 @@ afterEvaluate {
         repositories {
             maven {
                 name = "maven"
-                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                //val repositoryId = "SONATYPE_REPOSITORY_ID".byProperty ?: error("Missing env variable: SONATYPE_REPOSITORY_ID")
-                //url = uri("https://s01.oss.sonatype.org/service/local/staging/deployByRepositoryId/${repositoryId}/")
-                //url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+                val repositoryId = "SONATYPE_REPOSITORY_ID".byProperty ?: error("Missing env variable: SONATYPE_REPOSITORY_ID")
+                url = uri("https://s01.oss.sonatype.org/service/local/staging/deployByRepositoryId/${repositoryId}/")
+                // url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
                 credentials {
                     username = "SONATYPE_USERNAME".byProperty
                     password = "SONATYPE_PASSWORD".byProperty
@@ -93,7 +92,8 @@ afterEvaluate {
         val signingKey = "GPG_PRIVATE_KEY".byProperty
         val signingPwd = "GPG_PRIVATE_PASSWORD".byProperty
         if (signingKey.isNullOrBlank() || signingPwd.isNullOrBlank()) {
-            logger.info("Signing Disable as the PGP key was not found")
+//            logger.info("Signing Disable as the PGP key was not found")
+            error("Signing Disable as the PGP key was not found")
         } else {
             //logger.warn("Using $signingKey - $signingPwd")
             signing {
