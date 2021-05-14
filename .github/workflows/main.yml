@@ -1,6 +1,5 @@
 on:
-  release:
-    types: [published]
+  [workflow_dispatch]
 
 jobs:
   create_staging_repository:
