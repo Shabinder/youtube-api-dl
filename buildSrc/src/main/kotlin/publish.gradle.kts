@@ -27,19 +27,20 @@ afterEvaluate {
         repositories {
             maven {
                 name = "maven"
-                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                val repositoryId = "SONATYPE_REPOSITORY_ID".byProperty ?: error("Missing env variable: SONATYPE_REPOSITORY_ID")
+                url = uri("https://s01.oss.sonatype.org/service/local/staging/deployByRepositoryId/${repositoryId}/")
                 //url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
                 credentials {
-                    username = "OSS_USERNAME".byProperty
-                    password = "OSS_PASSWORD".byProperty
+                    username = "SONATYPE_USERNAME".byProperty
+                    password = "SONATYPE_PASSWORD".byProperty
                 }
             }
             maven {
                 name = "snapshot"
                 url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
                 credentials {
-                    username = "OSS_USERNAME".byProperty
-                    password = "OSS_PASSWORD".byProperty
+                    username = "SONATYPE_USERNAME".byProperty
+                    password = "SONATYPE_PASSWORD".byProperty
                 }
             }
         }
@@ -88,18 +89,18 @@ afterEvaluate {
             }
         }
 
-        val signingKey = "SIGNING_KEY".byProperty
-        val signingPwd = "SIGNING_PWD".byProperty
+        val signingKey = "GPG_PRIVATE_KEY".byProperty
+        val signingPwd = "GPG_PRIVATE_PASSWORD".byProperty
         if (signingKey.isNullOrBlank() || signingPwd.isNullOrBlank()) {
             logger.info("Signing Disable as the PGP key was not found")
         } else {
-            logger.warn("Usign $signingKey - $signingPwd")
+            //logger.warn("Using $signingKey - $signingPwd")
             signing {
-                //useInMemoryPgpKeys(signingKey, signingPwd)
+                useInMemoryPgpKeys(signingKey, signingPwd)
                 sign(publishing.publications["release"])
             }
         }
     }
 }
 
-val String.byProperty: String? get() = gradleLocalProperties(rootDir).getProperty(this)
+val String.byProperty: String? get() = gradleLocalProperties(rootDir).getProperty(this) ?: System.getenv(this)

@@ -29,7 +29,7 @@ jobs:
           java-version: 14
       - name: Publish
         run: |
-          ./gradlew publishAllPublicationsToOss
+          ./gradlew publishAllPublicationsToMavenRepository
         env:
           SONATYPE_REPOSITORY_ID: ${{ needs.create_staging_repository.outputs.repository-id }}
           SONATYPE_USERNAME: ${{ secrets.NEXUS_ACTIONS_SONATYPE_USERNAME }}
@@ -49,7 +49,7 @@ jobs:
           java-version: 14
       - name: Publish
         run: |
-          ./gradlew publishMingwX64PublicationToOss
+          ./gradlew publishMingwX64PublicationToMavenRepository
         env:
           SONATYPE_REPOSITORY_ID: ${{ needs.create_staging_repository.outputs.repository-id }}
           SONATYPE_USERNAME: ${{ secrets.NEXUS_ACTIONS_SONATYPE_USERNAME }}
