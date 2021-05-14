@@ -13,5 +13,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-rootProject.name = "youtube-api-dl"
 
+package io.github.shabinder.models.playlist
+
+data class YoutubePlaylist(
+    val details: PlaylistDetails,
+    val videos: List<PlaylistVideoDetails>
+) {
+    fun findVideoById(videoId: String?): PlaylistVideoDetails? = videos.firstOrNull { it.videoId.equals(videoId) }
+}

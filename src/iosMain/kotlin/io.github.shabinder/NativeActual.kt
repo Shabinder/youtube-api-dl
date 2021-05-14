@@ -13,5 +13,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-rootProject.name = "youtube-api-dl"
 
+package io.github.shabinder
+
+import kotlinx.coroutines.CoroutineScope
+
+actual fun runBlocking(block: suspend CoroutineScope.() -> Unit) =
+    kotlinx.coroutines.runBlocking(block = block)
+
+actual val activePlatform : TargetPlatforms = TargetPlatforms.Native

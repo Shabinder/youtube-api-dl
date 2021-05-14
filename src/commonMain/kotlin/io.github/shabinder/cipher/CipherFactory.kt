@@ -13,5 +13,18 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-rootProject.name = "youtube-api-dl"
 
+package io.github.shabinder.cipher
+
+import io.github.shabinder.exceptions.YoutubeException
+import kotlin.coroutines.cancellation.CancellationException
+
+interface CipherFactory {
+
+    @Throws(YoutubeException::class, CancellationException::class)
+    suspend fun createCipher(jsUrl: String): Cipher
+
+    fun addInitialFunctionPattern(priority: Int, regex: String)
+
+    fun addFunctionEquivalent(regex: String, function: CipherFunction)
+}

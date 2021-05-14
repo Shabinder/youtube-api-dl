@@ -13,5 +13,18 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-rootProject.name = "youtube-api-dl"
 
+package io.github.shabinder.cipher
+
+class DefaultCipher(
+    private val functions: List<JsFunction>,
+    private val functionsMap: Map<String, CipherFunction>
+) : Cipher {
+    override fun getSignature(cipheredSignature: String): String {
+        var signature = cipheredSignature.toCharArray()
+        for (jsFunction in functions) {
+            signature = functionsMap[jsFunction.name]!!.apply(signature, jsFunction.argument)
+        }
+        return signature.concatToString()
+    }
+}

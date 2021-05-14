@@ -13,5 +13,23 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-rootProject.name = "youtube-api-dl"
 
+package io.github.shabinder.extractor
+
+import io.github.shabinder.exceptions.YoutubeException
+import io.github.shabinder.models.Methods
+import kotlin.coroutines.cancellation.CancellationException
+
+interface Extractor {
+    fun setRequestProperty(key: String, value: String)
+    fun setRetryOnFailure(retryOnFailure: Int)
+
+    @Throws(YoutubeException::class)
+    fun extractYtPlayerConfig(html: String): String
+
+    @Throws(YoutubeException::class)
+    fun extractYtInitialData(html: String): String
+
+    @Throws(YoutubeException::class, CancellationException::class)
+    suspend fun loadUrl(url: String, rawData: String? = null, method: Methods = Methods.GET): String
+}

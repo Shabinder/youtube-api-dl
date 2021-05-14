@@ -16,12 +16,14 @@
 
 plugins {
     id("com.android.library")
-    kotlin("multiplatform") version "1.4.32"
+    kotlin("multiplatform")
     id("maven-publish")
+    //id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
 }
 
-group = "com.shabinder.downloader"
+group = "io.github.shabinder"
 version = "0.1"
+
 repositories {
     google()
     mavenCentral()
@@ -76,7 +78,7 @@ kotlin {
             dependencies {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3-native-mt")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.0")
             }
         }
         val commonTest by getting {

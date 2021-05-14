@@ -13,5 +13,15 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-rootProject.name = "youtube-api-dl"
 
+package io.github.shabinder.cipher
+
+internal class SwapFunctionV1 : CipherFunction {
+    override fun apply(array: CharArray, argument: String): CharArray {
+        val position = argument.toInt()
+        val c = array[0]
+        array[0] = array[position % array.size]
+        array[position] = c
+        return array
+    }
+}

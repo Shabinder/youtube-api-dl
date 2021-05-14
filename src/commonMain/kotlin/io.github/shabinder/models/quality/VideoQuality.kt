@@ -13,5 +13,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-rootProject.name = "youtube-api-dl"
 
+package io.github.shabinder.models.quality
+
+enum class VideoQuality {
+    unknown, highres,  // 3072p
+    hd2880p, hd2160, hd1440, hd1080, hd720, large,  // 480p
+    medium,  // 360p
+    small,  // 240p
+    tiny,  // 144p
+    noVideo
+}

@@ -13,5 +13,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-rootProject.name = "youtube-api-dl"
 
+package io.github.shabinder.cipher
+
+internal class ReverseFunction : CipherFunction {
+    override fun apply(array: CharArray, argument: String): CharArray {
+        val sb = StringBuilder().append(array)
+        return sb.reverse().toString().toCharArray()
+    }
+}
