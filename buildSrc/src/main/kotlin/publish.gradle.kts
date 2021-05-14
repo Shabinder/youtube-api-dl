@@ -27,8 +27,9 @@ afterEvaluate {
         repositories {
             maven {
                 name = "maven"
-                val repositoryId = "SONATYPE_REPOSITORY_ID".byProperty ?: error("Missing env variable: SONATYPE_REPOSITORY_ID")
-                url = uri("https://s01.oss.sonatype.org/service/local/staging/deployByRepositoryId/${repositoryId}/")
+                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                //val repositoryId = "SONATYPE_REPOSITORY_ID".byProperty ?: error("Missing env variable: SONATYPE_REPOSITORY_ID")
+                //url = uri("https://s01.oss.sonatype.org/service/local/staging/deployByRepositoryId/${repositoryId}/")
                 //url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
                 credentials {
                     username = "SONATYPE_USERNAME".byProperty
