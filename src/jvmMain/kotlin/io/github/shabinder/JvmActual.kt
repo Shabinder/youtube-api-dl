@@ -14,7 +14,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.shabinder.shabinder
+package io.github.shabinder
 
 import kotlinx.coroutines.CoroutineScope
 

@@ -17,8 +17,7 @@
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
-    id("maven-publish")
-    //id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
+    id("publish")
 }
 
 group = "io.github.shabinder"

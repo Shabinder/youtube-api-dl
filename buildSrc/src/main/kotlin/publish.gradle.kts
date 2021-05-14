@@ -26,8 +26,8 @@ afterEvaluate {
     publishing {
         repositories {
             maven {
-                name = "nexus"
-                url = uri("https://s01.oss.sonatype.org/service/local/")
+                name = "maven"
+                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
                 //url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
                 credentials {
                     username = "OSS_USERNAME".byProperty
@@ -55,16 +55,10 @@ afterEvaluate {
 //                artifact(sourcesJar)
 
                 pom {
-                    withXml {
-                        asNode().apply {
-                            appendNode("name", "youtube-api-dl")
-                            appendNode("description", "Multiplatform Youtube Metadata Retriever and Downloader")
-                            appendNode("url", "https://github.com/Shabinder/youtube-api-dl/")
-                        }
-                    }
                     if (!"USE_SNAPSHOT".byProperty.isNullOrBlank()) {
                         version = "$version-SNAPSHOT"
                     }
+                    name.set("youtube-api-dl")
                     description.set("Multiplatform Youtube Metadata Retriever and Downloader")
                     url.set("https://github.com/Shabinder/youtube-api-dl/")
 
@@ -101,7 +95,7 @@ afterEvaluate {
         } else {
             logger.warn("Usign $signingKey - $signingPwd")
             signing {
-                useInMemoryPgpKeys(signingKey, signingPwd)
+                //useInMemoryPgpKeys(signingKey, signingPwd)
                 sign(publishing.publications["release"])
             }
         }
