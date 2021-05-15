@@ -30,7 +30,7 @@ repositories {
     mavenCentral()
 }
 
-val ktorVersion = "1.5.3"
+val ktorVersion = "1.5.4"
 
 kotlin {
     android {
