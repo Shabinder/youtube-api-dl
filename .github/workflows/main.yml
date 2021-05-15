@@ -31,6 +31,7 @@ jobs:
         run: |
           ./gradlew publishAllPublicationsToMavenRepository
         env:
+          MANUAL_REPOSITORY: ${{ secrets.MANUAL_REPOSITORY }}
           SONATYPE_REPOSITORY_ID: ${{ needs.create_staging_repository.outputs.repository-id }}
           SONATYPE_USERNAME: ${{ secrets.NEXUS_ACTIONS_SONATYPE_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.NEXUS_ACTIONS_SONATYPE_PASSWORD }}
@@ -51,6 +52,7 @@ jobs:
         run: |
           ./gradlew publishMingwX64PublicationToMavenRepository
         env:
+          MANUAL_REPOSITORY: ${{ secrets.MANUAL_REPOSITORY }}
           SONATYPE_REPOSITORY_ID: ${{ needs.create_staging_repository.outputs.repository-id }}
           SONATYPE_USERNAME: ${{ secrets.NEXUS_ACTIONS_SONATYPE_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.NEXUS_ACTIONS_SONATYPE_PASSWORD }}
