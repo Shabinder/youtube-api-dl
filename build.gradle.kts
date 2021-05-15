@@ -23,7 +23,7 @@ plugins {
 }
 
 group = "io.github.shabinder"
-version = "0.1"
+version = "1.0"
 
 repositories {
     google()
