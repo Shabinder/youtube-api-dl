@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 /*
@@ -33,7 +35,7 @@ afterEvaluate {
                 setUrl{
                     "https://s01.oss.sonatype.org/service/local/staging/deployByRepositoryId/${repositoryId}/"
                 }
-//                 url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                // url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
                 credentials {
                     username = "SONATYPE_USERNAME".byProperty
                     password = "SONATYPE_PASSWORD".byProperty
@@ -52,15 +54,11 @@ afterEvaluate {
             archiveClassifier.value("javadoc")
             // TODO: instead of a single empty Javadoc JAR, generate real documentation for each module
         }
+
         publications {
-            create<MavenPublication>("release") {
-                if (plugins.hasPlugin("com.android.library")) {
-                    from(components["release"])
-                } else {
-                    from(components["java"])
-                }
+            withType<MavenPublication> {
+
                 artifact(javadocJar)
-//                artifact(sourcesJar)
 
                 pom {
                     if (!"USE_SNAPSHOT".byProperty.isNullOrBlank()) {
@@ -96,13 +94,11 @@ afterEvaluate {
             }
         }
 
-        val signingKey = "GPG_PRIVATE_KEY".byProperty
+        val signingKey = "GPG_PRIVATE_KEY".byProperty ?: "GPG_FILE".byProperty?.let { file(it).readText() }
         val signingPwd = "GPG_PRIVATE_PASSWORD".byProperty
         if (signingKey.isNullOrBlank() || signingPwd.isNullOrBlank()) {
-//            logger.info("Signing Disable as the PGP key was not found")
-            error("Signing Disable as the PGP key was not found")
+            logger.info("Signing Disable as the PGP key was not found")
         } else {
-            //logger.warn("Using $signingKey - $signingPwd")
             signing {
                 useInMemoryPgpKeys(signingKey, signingPwd)
                 sign(publishing.publications)
