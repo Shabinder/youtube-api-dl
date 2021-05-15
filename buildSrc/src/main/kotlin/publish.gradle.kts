@@ -28,7 +28,10 @@ afterEvaluate {
             maven {
                 name = "maven"
                 val repositoryId = "SONATYPE_REPOSITORY_ID".byProperty ?: error("Missing env variable: SONATYPE_REPOSITORY_ID")
-                url = uri("https://s01.oss.sonatype.org/service/local/staging/deployByRepositoryId${repositoryId}/")
+                setUrl{
+                    "https://s01.oss.sonatype.org/service/local/staging/deployByRepositoryId/${repositoryId}/"
+                }
+                logger.log(LogLevel.WARN,"-$repositoryId-")
                 // url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
                 credentials {
                     username = "SONATYPE_USERNAME".byProperty
@@ -44,7 +47,10 @@ afterEvaluate {
                 }
             }
         }
-
+        val javadocJar by tasks.creating(Jar::class) {
+            archiveClassifier.value("javadoc")
+            // TODO: instead of a single empty Javadoc JAR, generate real documentation for each module
+        }
         publications {
             create<MavenPublication>("release") {
                 if (plugins.hasPlugin("com.android.library")) {
@@ -52,7 +58,7 @@ afterEvaluate {
                 } else {
                     from(components["java"])
                 }
-//                artifact(dokkaJar)
+                artifact(javadocJar)
 //                artifact(sourcesJar)
 
                 pom {
@@ -88,20 +94,20 @@ afterEvaluate {
                 }
             }
         }
-
-        val signingKey = "GPG_PRIVATE_KEY".byProperty
-        val signingPwd = "GPG_PRIVATE_PASSWORD".byProperty
-        if (signingKey.isNullOrBlank() || signingPwd.isNullOrBlank()) {
-//            logger.info("Signing Disable as the PGP key was not found")
-            error("Signing Disable as the PGP key was not found")
-        } else {
-            //logger.warn("Using $signingKey - $signingPwd")
-            signing {
-                useInMemoryPgpKeys(signingKey, signingPwd)
-                sign(publishing.publications["release"])
-            }
-        }
     }
 }
-
+val signingKey = "GPG_PRIVATE_KEY".byProperty
+val signingPwd = "GPG_PRIVATE_PASSWORD".byProperty
+if (signingKey.isNullOrBlank() || signingPwd.isNullOrBlank()) {
+//            logger.info("Signing Disable as the PGP key was not found")
+    error("Signing Disable as the PGP key was not found")
+} else {
+    //logger.warn("Using $signingKey - $signingPwd")
+    signing {
+        useInMemoryPgpKeys(signingKey, signingPwd)
+        sign(publishing.publications["release"])
+        sign(publishing.publications)
+        sign(configurations.archives.get())
+    }
+}
 val String.byProperty: String? get() = gradleLocalProperties(rootDir).getProperty(this) ?: System.getenv(this)
