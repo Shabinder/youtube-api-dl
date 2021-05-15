@@ -94,6 +94,18 @@ afterEvaluate {
                 }
             }
         }
+        if (signingKey.isNullOrBlank() || signingPwd.isNullOrBlank()) {
+//            logger.info("Signing Disable as the PGP key was not found")
+            error("Signing Disable as the PGP key was not found")
+        } else {
+            //logger.warn("Using $signingKey - $signingPwd")
+            signing {
+                useInMemoryPgpKeys(signingKey, signingPwd)
+                //sign(publishing.publications["release"])
+                sign(publishing.publications)
+                sign(configurations.archives.get())
+            }
+        }
     }
 }
 val signingKey = "GPG_PRIVATE_KEY".byProperty
