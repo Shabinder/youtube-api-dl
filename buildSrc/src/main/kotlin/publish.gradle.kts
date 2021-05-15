@@ -94,6 +94,9 @@ afterEvaluate {
                 }
             }
         }
+
+        val signingKey = "GPG_PRIVATE_KEY".byProperty
+        val signingPwd = "GPG_PRIVATE_PASSWORD".byProperty
         if (signingKey.isNullOrBlank() || signingPwd.isNullOrBlank()) {
 //            logger.info("Signing Disable as the PGP key was not found")
             error("Signing Disable as the PGP key was not found")
@@ -108,18 +111,5 @@ afterEvaluate {
         }
     }
 }
-val signingKey = "GPG_PRIVATE_KEY".byProperty
-val signingPwd = "GPG_PRIVATE_PASSWORD".byProperty
-if (signingKey.isNullOrBlank() || signingPwd.isNullOrBlank()) {
-//            logger.info("Signing Disable as the PGP key was not found")
-    error("Signing Disable as the PGP key was not found")
-} else {
-    //logger.warn("Using $signingKey - $signingPwd")
-    signing {
-        useInMemoryPgpKeys(signingKey, signingPwd)
-        //sign(publishing.publications["release"])
-        sign(publishing.publications)
-        sign(configurations.archives.get())
-    }
-}
+
 val String.byProperty: String? get() = gradleLocalProperties(rootDir).getProperty(this) ?: System.getenv(this)
