@@ -73,6 +73,7 @@ jobs:
         if: ${{ needs.macos.result == 'success' && needs.windows.result == 'success' }}
         uses: nexus-actions/release-nexus-staging-repo@main
         with:
+          base_url: https://s01.oss.sonatype.org/service/local/
           username: ${{ secrets.NEXUS_ACTIONS_SONATYPE_USERNAME }}
           password: ${{ secrets.NEXUS_ACTIONS_SONATYPE_PASSWORD }}
           staging_repository_id: ${{ needs.create_staging_repository.outputs.repository-id }}
