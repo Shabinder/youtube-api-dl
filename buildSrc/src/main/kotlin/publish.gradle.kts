@@ -105,7 +105,7 @@ if (signingKey.isNullOrBlank() || signingPwd.isNullOrBlank()) {
     //logger.warn("Using $signingKey - $signingPwd")
     signing {
         useInMemoryPgpKeys(signingKey, signingPwd)
-        sign(publishing.publications["release"])
+        //sign(publishing.publications["release"])
         sign(publishing.publications)
         sign(configurations.archives.get())
     }
