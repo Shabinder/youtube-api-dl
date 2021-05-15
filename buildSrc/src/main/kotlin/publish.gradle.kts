@@ -108,4 +108,4 @@ afterEvaluate {
     }
 }
 
-val String.byProperty: String? get() = gradleLocalProperties(rootDir).getProperty(this) ?: System.getenv(this)
+val String.byProperty: String? get() = gradleLocalProperties(rootDir).getProperty(this) ?: project.findProperty(this) as? String ?: System.getenv(this)

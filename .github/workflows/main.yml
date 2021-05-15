@@ -29,7 +29,7 @@ jobs:
           java-version: 14
       - name: Publish
         run: |
-          ./gradlew publishAllPublicationsToMavenRepository
+          ./gradlew publishAllPublicationsToMavenRepository -PSONATYPE_REPOSITORY_ID=${{ needs.create_staging_repository.outputs.repository_id }}
         env:
           MANUAL_REPOSITORY: ${{ secrets.MANUAL_REPOSITORY }}
           SONATYPE_REPOSITORY_ID: ${{ needs.create_staging_repository.outputs.repository_id }}
@@ -50,7 +50,7 @@ jobs:
           java-version: 14
       - name: Publish
         run: |
-          ./gradlew publishMingwX64PublicationToMavenRepository
+          ./gradlew publishMingwX64PublicationToMavenRepository -PSONATYPE_REPOSITORY_ID=${{ needs.create_staging_repository.outputs.repository_id }}
         env:
           MANUAL_REPOSITORY: ${{ secrets.MANUAL_REPOSITORY }}
           SONATYPE_REPOSITORY_ID: ${{ needs.create_staging_repository.outputs.repository_id }}
