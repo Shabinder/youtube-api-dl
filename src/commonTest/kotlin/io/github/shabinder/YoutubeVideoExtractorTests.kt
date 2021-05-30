@@ -18,19 +18,16 @@ package io.github.shabinder
 
 import io.github.shabinder.TestUtils.ME_AT_THE_ZOO_ID
 import io.github.shabinder.TestUtils.isReachable
+import io.github.shabinder.cipher.CachedCipherFactory
 import io.github.shabinder.exceptions.YoutubeException
+import io.github.shabinder.extractor.DefaultExtractor
 import io.github.shabinder.models.Extension
 import io.github.shabinder.models.VideoDetails
 import io.github.shabinder.models.YoutubeVideo
 import io.github.shabinder.models.formats.AudioVideoFormat
 import io.github.shabinder.models.formats.Format
 import io.github.shabinder.models.quality.AudioQuality
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertFalse
-import kotlin.test.assertNotEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 internal class YoutubeVideoExtractorTests {
 
@@ -38,8 +35,8 @@ internal class YoutubeVideoExtractorTests {
 
     //@Test
     fun videoWithoutSignatureSuccess() = runBlocking {
-        val video: YoutubeVideo = downloader.getVideo(ME_AT_THE_ZOO_ID)
-        val details: VideoDetails = video.videoDetails
+        val video: YoutubeVideo = downloader.getVideo("ME_AT_THE_ZOO_ID")
+        val details = video.videoDetails
         assertEquals(ME_AT_THE_ZOO_ID, details.videoId, "videoId should be $ME_AT_THE_ZOO_ID")
         val title = "Me at the zoo"
         assertEquals(title, details.title, "title should be $title")

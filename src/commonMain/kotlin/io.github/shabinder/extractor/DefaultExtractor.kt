@@ -111,19 +111,19 @@ class DefaultExtractor : Extractor {
     }
 
     companion object {
-        private val YT_PLAYER_CONFIG_PATTERNS = listOf(
-            Regex(";ytplayer\\.config = (\\{.*?\\})\\;ytplayer"),
-            Regex(";ytplayer\\.config = (\\{.*?\\})\\;"),
-            Regex("ytInitialPlayerResponse\\s*=\\s*(\\{.+?\\})\\;var meta")
+        val YT_PLAYER_CONFIG_PATTERNS = listOf(
+            """;ytplayer\.config = (\{.*?\});ytplayer""".toRegex(),
+            """;ytplayer\.config = (\{.*?\});""".toRegex(),
+            """ytInitialPlayerResponse\s*=\s*(\{.+?\});var meta""".toRegex()
         )
-        private val YT_INITIAL_DATA_PATTERNS = listOf(
+        val YT_INITIAL_DATA_PATTERNS = listOf(
             Regex("window\\[\"ytInitialData\"\\] = (\\{.*?\\});"),
             Regex("ytInitialData = (\\{.*?\\});")
         )
-        private const val DEFAULT_USER_AGENT =
+        const val DEFAULT_USER_AGENT =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36"
-        private const val DEFAULT_ACCEPT_LANG = "en-US,en;"
-        private const val DEFAULT_RETRY_ON_FAILURE = 3
+        const val DEFAULT_ACCEPT_LANG = "en-US,en;"
+        const val DEFAULT_RETRY_ON_FAILURE = 3
     }
 
     init {

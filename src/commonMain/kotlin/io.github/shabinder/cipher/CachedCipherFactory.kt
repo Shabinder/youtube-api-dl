@@ -216,30 +216,33 @@ class CachedCipherFactory(private val extractor: Extractor) : CipherFactory {
     }
 
     companion object {
-        private val INITIAL_FUNCTION_PATTERNS = arrayOf(
-            "\\b[cs]\\s*&&\\s*[adf]\\.set\\([^,]+\\s*,\\s*encodeURIComponent\\s*\\(\\s*([a-zA-Z0-9$]+)\\(",
-            "\\b[a-zA-Z0-9]+\\s*&&\\s*[a-zA-Z0-9]+\\.set\\([^,]+\\s*,\\s*encodeURIComponent\\s*\\(\\s*([a-zA-Z0-9$]+)\\(",
-            "(?:\\b|[^a-zA-Z0-9$])([a-zA-Z0-9$]{2})\\s*=\\s*function\\(\\s*a\\s*\\)\\s*\\{\\s*a\\s*=\\s*a\\.split\\(\\s*\"\"\\s*\\)",
-            "([a-zA-Z0-9$]+)\\s*=\\s*function\\(\\s*a\\s*\\)\\s*\\{\\s*a\\s*=\\s*a\\.split\\(\\s*\"\"\\s*\\)",
-            "([\"'])signature\\1\\s*,\\s*([a-zA-Z0-9$]+)\\(",
-            "\\.sig\\|\\|([a-zA-Z0-9$]+)\\(",
-            "yt\\.akamaized\\.net/\\)\\s*\\|\\|\\s*.*?\\s*[cs]\\s*&&\\s*[adf]\\.set\\([^,]+\\s*,\\s*(?:encodeURIComponent\\s*\\()?\\s*()$",
-            "\\b[cs]\\s*&&\\s*[adf]\\.set\\([^,]+\\s*,\\s*([a-zA-Z0-9$]+)\\(",
-            "\\b[a-zA-Z0-9]+\\s*&&\\s*[a-zA-Z0-9]+\\.set\\([^,]+\\s*,\\s*([a-zA-Z0-9$]+)\\(",
-            "\\bc\\s*&&\\s*a\\.set\\([^,]+\\s*,\\s*\\([^)]*\\)\\s*\\(\\s*([a-zA-Z0-9$]+)\\(",
-            "\\bc\\s*&&\\s*[a-zA-Z0-9]+\\.set\\([^,]+\\s*,\\s*\\([^)]*\\)\\s*\\(\\s*([a-zA-Z0-9$]+)\\("
+        val INITIAL_FUNCTION_PATTERNS = arrayOf(
+            """\b[cs]\s*&&\s*[adf]\.set\([^,]+\s*,\s*encodeURIComponent\s*\(\s*([a-zA-Z0-9${'$'}]+)\(""",
+            """\b[a-zA-Z0-9]+\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*encodeURIComponent\s*\(\s*([a-zA-Z0-9${'$'}]+)\(""",
+            """(?:\b|[^a-zA-Z0-9${'$'}])([a-zA-Z0-9${'$'}]{2})\s*=\s*function\(\s*a\s*\)\s*\{\s*a\s*=\s*a\.split\(\s*""\s*\)""",
+            """([a-zA-Z0-9${'$'}]+)\s*=\s*function\(\s*a\s*\)\s*\{\s*a\s*=\s*a\.split\(\s*""\s*\)""",
+            """(["'])signature\1\s*,\s*([a-zA-Z0-9${'$'}]+)\(""",
+            """\.sig\|\|([a-zA-Z0-9${'$'}]+)\(""",
+            """yt\.akamaized\.net/\)\s*\|\|\s*.*?\s*[cs]\s*&&\s*[adf]\.set\([^,]+\s*,\s*(?:encodeURIComponent\s*\()?\s*()${'$'}""",
+            """\b[cs]\s*&&\s*[adf]\.set\([^,]+\s*,\s*([a-zA-Z0-9${'$'}]+)\(""",
+            """\b[a-zA-Z0-9]+\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*([a-zA-Z0-9${'$'}]+)\(""",
+            """\bc\s*&&\s*a\.set\([^,]+\s*,\s*\([^)]*\)\s*\(\s*([a-zA-Z0-9${'$'}]+)\(""",
+            """\bc\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*\([^)]*\)\s*\(\s*([a-zA-Z0-9${'$'}]+)\("""
         )
-        private const val FUNCTION_REVERSE_PATTERN = "\\{\\w\\.reverse\\(\\)\\}"
-        private const val FUNCTION_SPLICE_PATTERN = "\\{\\w\\.splice\\(0,\\w\\)\\}"
-        private const val FUNCTION_SWAP1_PATTERN =
-            "\\{var\\s\\w=\\w\\[0];\\w\\[0]=\\w\\[\\w%\\w.length];\\w\\[\\w]=\\w\\}"
-        private const val FUNCTION_SWAP2_PATTERN =
-            "\\{var\\s\\w=\\w\\[0];\\w\\[0]=\\w\\[\\w%\\w.length];\\w\\[\\w%\\w.length]=\\w\\}"
-        private const val FUNCTION_SWAP3_PATTERN =
-            "function\\(\\w+,\\w+\\)\\{var\\s\\w=\\w\\[0];\\w\\[0]=\\w\\[\\w%\\w.length];\\w\\[\\w%\\w.length]=\\w\\}"
-        private val JS_FUNCTION_PATTERNS: Array<Regex> = arrayOf(
-            Regex("\\w+\\.(\\w+)\\(\\w,(\\d+)\\)"),
-            Regex("\\w+\\[(\\\"\\w+\\\")\\]\\(\\w,(\\d+)\\)")
+        const val FUNCTION_REVERSE_PATTERN = """\{\w\.reverse\(\)\}"""
+        const val FUNCTION_SPLICE_PATTERN = """\{\w\.splice\(0,\w\)\}"""
+        // /\{var\s\w=\w\[0];\w\[0]=\w\[\w%\w.length];\w\[\w]=\w\}/
+        val FUNCTION_SWAP1_PATTERN =
+            "\\{var\\s\\w=\\w[0];\\w[0]=\\w[\\w%\\w.length];\\w[\\w]=\\w\\}"
+        const val FUNCTION_SWAP2_PATTERN =
+            """\{var\s\w=\w[0];\w[0]=\w[\w%\w.length];\w[\w%\w.length]=\w\}"""
+        const val FUNCTION_SWAP3_PATTERN =
+            """function\(\w+,\w+\)\{var\s\w=\w[0];\w[0]=\w[\w%\w.length];\w[\w%\w.length]=\w\}"""
+
+        @Suppress("RegExpRedundantEscape")
+        val JS_FUNCTION_PATTERNS: Array<Regex> = arrayOf(
+            """\w+\.(\w+)\(\w,(\d+)\)""".toRegex(),
+            """\w+\[(\\"\w+\\")\]\(\w,(\d+)\)""".toRegex()
         )
     }
 
