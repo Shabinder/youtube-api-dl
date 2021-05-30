@@ -17,7 +17,7 @@
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
-    id("maven-publish")
+    id("publish")
 }
 
 group = "com.shabinder.downloader"
