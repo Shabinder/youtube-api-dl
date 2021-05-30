@@ -20,7 +20,7 @@ plugins {
     id("publish")
 }
 
-group = "com.shabinder.downloader"
+group = "io.github.shabinder"
 version = "1.1"
 
 repositories {
