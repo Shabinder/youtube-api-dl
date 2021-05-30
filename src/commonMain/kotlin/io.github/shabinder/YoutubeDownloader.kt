@@ -32,13 +32,19 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlin.coroutines.cancellation.CancellationException
 
-class YoutubeDownloader(private val parser: Parser = DefaultParser(), private val corsProxyAddress: String = "https://kind-grasshopper-73.telebit.io/cors/") {
+class YoutubeDownloader(
+    private val parser: Parser = DefaultParser(),
+    enableCORSProxy:Boolean = true,
+    CORSProxyAddress: String = "https://kind-grasshopper-73.telebit.io/cors/"
+) {
+    var isCORSEnabled: Boolean = enableCORSProxy
+    var addressCORS: String = CORSProxyAddress
 
-    private val corsProxy get() = ""// if(activePlatform is TargetPlatforms.Js) corsProxyAddress else ""
+    private val proxyCORS get() = if(activePlatform is TargetPlatforms.Js && isCORSEnabled) addressCORS else ""
 
     @Throws(YoutubeException::class, CancellationException::class)
     suspend fun getVideo(videoId: String): YoutubeVideo {
-        val htmlUrl = "${corsProxy}https://www.youtube.com/watch?v=$videoId"
+        val htmlUrl = "${proxyCORS}https://www.youtube.com/watch?v=$videoId"
         val ytPlayerConfig: MutableMap<String,JsonElement> = parser.getPlayerConfig(htmlUrl).toMutableMap()
         ytPlayerConfig["yt-downloader-videoId"] = JsonPrimitive(videoId)
         val ytConfigJson = JsonObject(ytPlayerConfig)
@@ -52,7 +58,7 @@ class YoutubeDownloader(private val parser: Parser = DefaultParser(), private va
 
     @Throws(YoutubeException::class, CancellationException::class)
     suspend fun getPlaylist(playlistId: String): YoutubePlaylist {
-        val htmlUrl = "${corsProxy}https://www.youtube.com/playlist?list=$playlistId"
+        val htmlUrl = "${proxyCORS}https://www.youtube.com/playlist?list=$playlistId"
         val ytInitialData: JsonObject = parser.getInitialData(htmlUrl)
         if (!ytInitialData.containsKey("metadata")) {
             throw YoutubeException.BadPageException("Invalid initial data json")
