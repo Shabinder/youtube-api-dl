@@ -4,3 +4,4 @@
 local.properties
 /buildSrc/.gradle/
 /buildSrc/build/
+/src/jvmMain/kotlin/io/github/shabinder/testing/

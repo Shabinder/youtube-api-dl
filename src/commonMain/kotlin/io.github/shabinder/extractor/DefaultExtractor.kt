@@ -114,7 +114,7 @@ class DefaultExtractor : Extractor {
         val YT_PLAYER_CONFIG_PATTERNS = listOf(
             """;ytplayer\.config = (\{.*?\});ytplayer""".toRegex(),
             """;ytplayer\.config = (\{.*?\});""".toRegex(),
-            """ytInitialPlayerResponse\s*=\s*(\{.+?\});var meta""".toRegex()
+            """ytInitialPlayerResponse\s*=\s*(\{.+?\})\s*;""".toRegex()
         )
         val YT_INITIAL_DATA_PATTERNS = listOf(
             Regex("window\\[\"ytInitialData\"\\] = (\\{.*?\\});"),

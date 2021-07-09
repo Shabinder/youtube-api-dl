@@ -232,12 +232,12 @@ class CachedCipherFactory(private val extractor: Extractor) : CipherFactory {
         const val FUNCTION_REVERSE_PATTERN = """\{\w\.reverse\(\)\}"""
         const val FUNCTION_SPLICE_PATTERN = """\{\w\.splice\(0,\w\)\}"""
         // /\{var\s\w=\w\[0];\w\[0]=\w\[\w%\w.length];\w\[\w]=\w\}/
-        val FUNCTION_SWAP1_PATTERN =
-            "\\{var\\s\\w=\\w[0];\\w[0]=\\w[\\w%\\w.length];\\w[\\w]=\\w\\}"
+        const val FUNCTION_SWAP1_PATTERN =
+            """"\{var\s\w=\w\[0];\w\[0]=\w\[\w%\w.length];\w\[\w]=\w\}"""
         const val FUNCTION_SWAP2_PATTERN =
-            """\{var\s\w=\w[0];\w[0]=\w[\w%\w.length];\w[\w%\w.length]=\w\}"""
+            """\{var\s\w=\w\[0];\w\[0]=\w\[\w%\w.length];\w\[\w%\w.length]=\w\}"""
         const val FUNCTION_SWAP3_PATTERN =
-            """function\(\w+,\w+\)\{var\s\w=\w[0];\w[0]=\w[\w%\w.length];\w[\w%\w.length]=\w\}"""
+            """function\(\w+,\w+\)\{var\s\w=\w\[0];\w\[0]=\w\[\w%\w.length];\w\[\w%\w.length]=\w\}"""
 
         @Suppress("RegExpRedundantEscape")
         val JS_FUNCTION_PATTERNS: Array<Regex> = arrayOf(
