@@ -33,10 +33,11 @@ internal class YoutubeVideoExtractorTests {
 
     private val downloader: YoutubeDownloader = YoutubeDownloader()
 
-    //@Test
+    @Test
     fun videoWithoutSignatureSuccess() = runBlocking {
-        val video: YoutubeVideo = downloader.getVideo("ME_AT_THE_ZOO_ID")
+        val video: YoutubeVideo = downloader.getVideo(ME_AT_THE_ZOO_ID)
         val details = video.videoDetails
+        println(video.getVideoWithAudioFormats().joinToString("\n"))
         assertEquals(ME_AT_THE_ZOO_ID, details.videoId, "videoId should be $ME_AT_THE_ZOO_ID")
         val title = "Me at the zoo"
         assertEquals(title, details.title, "title should be $title")

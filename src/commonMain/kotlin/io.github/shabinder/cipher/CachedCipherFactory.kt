@@ -70,7 +70,7 @@ class CachedCipherFactory(private val extractor: Extractor) : CipherFactory {
     private fun getTransformFunctions(js: String): List<JsFunction> {
         val name = getInitialFunctionName(js).replace("[^\$A-Za-z0-9_]".toRegex(), "")
         val pattern =
-            Regex(Regex.escape(name) + "=function\\(\\w\\)\\{[a-z=\\.\\(\\\"\\)]*;(.*);(?:.+)\\}")
+            Regex(Regex.escape(name) + "=function\\(\\w\\)\\{[a-z=.(\")]*;(.*);(?:.+)\\}")
         val matcher = pattern.find(js)
         if (!matcher?.value.isNullOrBlank()) {
             val jsFunctions: Array<String> = matcher?.groupValues?.get(1)?.split(";")?.toTypedArray() ?: arrayOf()
@@ -188,7 +188,7 @@ class CachedCipherFactory(private val extractor: Extractor) : CipherFactory {
         val mapper: MutableMap<String, CipherFunction> = HashMap()
         for (obj in transformObject) {
             @Suppress("CHANGING_ARGUMENTS_EXECUTION_ORDER_FOR_NAMED_VARARGS")
-            val split = obj.split(delimiters = charArrayOf(':'),ignoreCase = true,limit = 2).toTypedArray()
+            val split = obj.split(':',limit = 2)
             val name = split[0]
             val jsFunction = split[1]
             val function = mapFunction(jsFunction)
@@ -233,11 +233,15 @@ class CachedCipherFactory(private val extractor: Extractor) : CipherFactory {
         const val FUNCTION_SPLICE_PATTERN = """\{\w\.splice\(0,\w\)\}"""
         // /\{var\s\w=\w\[0];\w\[0]=\w\[\w%\w.length];\w\[\w]=\w\}/
         const val FUNCTION_SWAP1_PATTERN =
-            """"\{var\s\w=\w\[0];\w\[0]=\w\[\w%\w.length];\w\[\w]=\w\}"""
+            //"\\{var\\s\\w=\\w\\[0];\\w\\[0]=\\w\\[\\w%\\w.length];\\w\\[\\w]=\\w\\}"
+            //""""\{var\s\w=\w\[0];\w\[0]=\w\[\w%\w.length];\w\[\w]=\w\}"""
+            """\{var\s\w=\w\[0\];\w\[0\]=\w\[\w%\w.length\];\w\[\w\]=\w\}"""
         const val FUNCTION_SWAP2_PATTERN =
-            """\{var\s\w=\w\[0];\w\[0]=\w\[\w%\w.length];\w\[\w%\w.length]=\w\}"""
+            //"""\{var\s\w=\w\[0];\w\[0]=\w\[\w%\w.length];\w\[\w%\w.length]=\w\}"""
+            """\{var\s\w=\w\[0\];\w\[0\]=\w\[\w%\w.length\];\w\[\w%\w.length\]=\w\}"""
         const val FUNCTION_SWAP3_PATTERN =
-            """function\(\w+,\w+\)\{var\s\w=\w\[0];\w\[0]=\w\[\w%\w.length];\w\[\w%\w.length]=\w\}"""
+            //"""function\(\w+,\w+\)\{var\s\w=\w\[0];\w\[0]=\w\[\w%\w.length];\w\[\w%\w.length]=\w\}"""
+            """function\(\w+,\w+\)\{var\s\w=\w\[0\];\w\[0\]=\w\[\w%\w.length\];\w\[\w%\w.length\]=\w\}"""
 
         @Suppress("RegExpRedundantEscape")
         val JS_FUNCTION_PATTERNS: Array<Regex> = arrayOf(

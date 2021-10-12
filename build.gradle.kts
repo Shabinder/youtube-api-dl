@@ -21,14 +21,14 @@ plugins {
 }
 
 group = "io.github.shabinder"
-version = "1.3"
+version = "1.4"
 
 repositories {
     google()
     mavenCentral()
 }
 
-val ktorVersion = "1.6.0"
+val ktorVersion = "1.6.4"
 
 kotlin {
     android {
@@ -49,6 +49,7 @@ kotlin {
             useJUnit()
         }
     }
+    //IR works reliably, Legacy experiences DCE issues
     js(BOTH) {
         browser {
             testTask {
@@ -74,8 +75,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0-native-mt")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
             }
         }
         val commonTest by getting {
@@ -139,7 +140,7 @@ kotlin {
     }
 }
 android {
-    compileSdkVersion(29)
+    compileSdkVersion(31)
     defaultConfig {
         minSdkVersion(21)
         targetSdkVersion(29)
